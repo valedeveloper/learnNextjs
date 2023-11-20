@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const url: string = "http://localhost:3000/api/avo"
 
 export const useProduct = (idAvo: string | null) => {
-    const [avos, setAvos] = useState([]);
+    const [avos, setAvos] = useState<TProduct[]>([]);
     const [avo, setAvo] = useState({})
     const [isLoading,setIsLoading]=useState(false)
 

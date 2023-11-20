@@ -1,11 +1,15 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import React from "react";
-
-function Layout({ children }): React.FC {
+type LayoutProps = {
+  children?: React.ReactNode
+}
+function Layout({ children }:LayoutProps) {
   return (
     <>
       <Navbar />
       {children}
+      <Footer/>
     </>
   );
 }
