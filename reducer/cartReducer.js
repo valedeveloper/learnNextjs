@@ -1,16 +1,19 @@
-export const cartReducer = {
+import { updateLocalStorage } from "../utilities/updateLocalStorage";
+export const cartInitialState = {
+  productInCart: [],
+};
+
+export const UPDATE_STATE_BY_ACTION = {
   ADD_TO_CART: (state, action) => {
     const productInCartIndex = state.productInCart.findIndex(
-      (product) =>
-        product.itemCode === action.payload.id &&
-        product.sizeSelected === action.payload.size
+      (product) => product.id === action.payload.id
     );
     if (productInCartIndex >= 0) {
       const newCardProducts = [...state.productInCart];
       newCardProducts[productInCartIndex].quantity += 1; // Actualizar la cantidad del producto existente
       newCardProducts[productInCartIndex].totalPrice =
         newCardProducts[productInCartIndex].quantity *
-        newCardProducts[productInCartIndex].salesPrice;
+        newCardProducts[productInCartIndex].price;
 
       const newState = {
         ...state,
@@ -23,22 +26,20 @@ export const cartReducer = {
         productInCart: [
           ...state.productInCart,
           {
-            ...action.payload.product,
+            ...action.payload,
             quantity: 1,
-            sizeSelected: action.payload.size,
-            totalPrice: action.payload.product.salesPrice,
+            totalPrice: action.payload.price,
           },
         ],
       };
       updateLocalStorage(newState);
+      console.log(newState);
       return newState;
     }
   }, //Cuando se modifica la copia, no se puede retornar el estado a la vez
   SUBTRACT_TO_CART: (state, action) => {
     const productInCartIndex = state.productInCart.findIndex(
-      (product) =>
-        product.itemCode === action.payload.product.itemCode &&
-        product.sizeSelected === action.payload.product.sizeSelected
+      (product) => product.id === action.payload.id
     );
 
     if (productInCartIndex >= 0) {
@@ -46,7 +47,7 @@ export const cartReducer = {
       newCardProducts[productInCartIndex].quantity -= 1; // Actualizar la cantidad del producto existente
       newCardProducts[productInCartIndex].totalPrice =
         newCardProducts[productInCartIndex].quantity *
-        newCardProducts[productInCartIndex].salesPrice;
+        newCardProducts[productInCartIndex].price;
 
       const newState = {
         ...state,
@@ -59,11 +60,7 @@ export const cartReducer = {
   REMOVE_FROM_CART: (state, action) => {
     // Filtra el carrito para crear una nueva copia sin el producto a eliminar
     const newProductInCart = state.productInCart.filter(
-      (product) =>
-        !(
-          product.itemCode === action.payload.product.itemCode &&
-          product.sizeSelected === action.payload.product.sizeSelected
-        )
+      (product) => !(product.id === action.payload.id)
     );
 
     const newState = {
@@ -80,4 +77,10 @@ export const cartReducer = {
     updateLocalStorage(newState);
     return newState;
   },
+};
+
+export const cartReducer = (state, action) => {
+  const { type: actionType } = action;
+  const updateState = UPDATE_STATE_BY_ACTION[actionType];
+  return updateState ? updateState(state, action) : state;
 };

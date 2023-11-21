@@ -1,18 +1,13 @@
 import React, { createContext, useReducer } from 'react'
-import { cartReducer } from '../reducer/cartReducer';
+import { cartReducer,cartInitialState } from '../reducer/cartReducer';
 
 type LayoutProps = {
     children?: React.ReactNode
 }
-export const CartContext = createContext(null)
-const initialState:string | null = JSON.parse(window.localStorage.getItem("cart")) || {
-    productInCart: [],
-  };
-
-
+export const CartContext = createContext()
 
 function CartProvider({ children }: LayoutProps) {
-    const [state, dispatch] = useReducer(cartReducer, initialState)
+    const [state, dispatch] = useReducer(cartReducer, cartInitialState)
 
 
     return (

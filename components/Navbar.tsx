@@ -1,22 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import 'tailwindcss/tailwind.css';
 
 import { Avocado, Basket } from "./SVGIcons";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import ItemMenu from "./ItemMenu";
+
+const itemMenu = [
+  {
+    path: "/",
+    icon: <Avocado />,
+    title: "Avo Store"
+  },
+  {
+    path: "/cart",
+    icon: <Basket />,
+    title: "Canasta"
+  }
+
+]
 function Navbar(): JSX.Element {
+
+
+
+
+
   return (
     <nav className="flex justify-between p-5 shadow-lg mb-5 ">
-      <Link href="/">
-        <div className="flex items-center space-x-2">
-          <Avocado />
-          <h2>Avo Store</h2>
-        </div>
-      </Link>
-      <Link href="/">
-        <div className="flex items-center space-x-2" >
-          <Basket />
-          <h2>Canasta</h2>
-        </div></Link>
+      {
+        itemMenu.map((item) => <ItemMenu item={item} />)
+      }
     </nav>
   );
 }

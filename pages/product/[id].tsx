@@ -1,35 +1,36 @@
+import React, { useEffect } from 'react'
 import { useProduct } from "@/hook/useProduct"
-import React from 'react'
 import { useRouter } from "next/router"
+import { useCart } from "@/hook/useCart"
 import Spinner from "@/components/Spinner/Spinner"
 //path alias
 
 function DescriptionProduct(): JSX.Element {
     const router = useRouter()
     const { avo, isLoading } = useProduct(router.query.id as string)
-
+    const { addProduct, removeProduct, state } = useCart()
+     const checkProductInCart = (product) => {
+        return state.productInCart.some((item) => item.id === product.id);
+      };
+      
+    const isProductInCart = checkProductInCart(avo)
     return (
         <>
             {
                 isLoading ? <Spinner /> :
                     <>:
                         <div className="h-full flex flex-col items-center lg:flex-row">
-                            <img className="lg:w-1/2" src={avo.image} alt="Bacon Avo" />
+                            <img className="w-1/2" src={avo.image} alt="Bacon Avo" />
                             <div className="lg:w-1/2 space-y-2 p-5">
                                 <h1 className="font-bold">{avo.name}</h1>
                                 <p>{avo.price}</p>
                                 <p className="bg-slate-300 w-max p-1 rounded-md text-sm">{avo.sku}</p>
-                                <div className="flex items-center space-x-2">
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        pattern="\d+"
-                                        className="border-black border p-1"
-                                    />
-                                    <button className="bg-green-800 border border-green-800 text-white p-1">
-                                        Agregar al Carrito
-                                    </button>
-                                </div>
+
+                                {isProductInCart ? <button className="bg-red-500 border border-red-500 text-white p-1" onClick={() => removeProduct(avo)}>
+                                    Eliminar del Carrito
+                                </button> : <button className="bg-green-800 border border-green-800 text-white p-1" onClick={() => addProduct(avo)}>
+                                    Agregar al Carrito
+                                </button>}
                                 <h3 className="font-bold">About this Avocado</h3>
                                 <p className=" pb-5  border-b-2">
                                     {

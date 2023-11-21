@@ -19,4 +19,10 @@ type TAPIAvoResponse = {
     data: TProduct[]
     error?: string
   }
+
+  type TItemMenu={
+    path: string;
+    icon: React.JSX.Element;
+    title: string;
+  }
   
